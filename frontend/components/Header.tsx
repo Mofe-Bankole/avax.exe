@@ -1,0 +1,55 @@
+import React from 'react';
+
+export default function Header(){
+const AVALANCHE_RED = "#E84142";
+
+    return(
+        <header className="sticky top-0 z-20 border-b border-neutral-800/70 backdrop-blur bg-black/60">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          {/* Logo + name */}
+          <div className="flex items-center gap-2">
+        
+            <div className="flex flex-col leading-tight">    
+              <span className="text-lg font-bold tracking-tight">
+                avax<span style={{ color: AVALANCHE_RED }}>.exe</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation + actions */}
+          <nav className="hidden items-center gap-6 text-sm text-neutral-300 md:flex">
+            <a href="#features" className="hover:text-white">
+              Features
+            </a>
+            <a href="#leaderboards" className="hover:text-white">
+              Leaderboards
+            </a>
+            <a href="#ai" className="hover:text-white">
+              AI Suggestions
+            </a>
+            <a href="#social" className="hover:text-white">
+              Social & Chat
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <button className="rounded-full border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-200 hover:border-neutral-500 hover:bg-neutral-900">
+              Login
+            </button>
+            <button className="rounded-full border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-200 hover:border-neutral-500 hover:bg-neutral-900">
+              Register
+            </button>
+            <button
+              className="rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-black shadow-lg shadow-red-500/40"
+              style={{
+                background:
+                  "linear-gradient(135deg, #FF6767 0%, #E84142 45%, #FF9F7B 100%)",
+              }}
+            >
+              Connect Wallet
+            </button>
+          </div>
+        </div>
+      </header>
+    )
+}
