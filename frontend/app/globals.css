@@ -174,3 +174,9 @@
     @apply bg-background text-foreground;
   }
 }
+.avalanche-border{
+  border-color: var(--avalanche-border);
+}
+.avalanche-background{
+  background-color: var(--avalanche-dark-card);
+}

@@ -1,4 +1,6 @@
-const config = {
-    PORT : process.env.PORT,
-    SUPABASE_URL : process.env.PORT
-}
+import { Config } from "../types/types";
+// import dotenv from "dotenv";
+// dotenv.config()
+// const config : Config = {
+//     PORT : process
+// }

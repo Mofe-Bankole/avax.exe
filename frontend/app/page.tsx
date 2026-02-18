@@ -2,11 +2,12 @@
 import ContentButton from "@/components/ContentButton";
 import Header from "@/components/Header";
 import React from "react";
-
+import pfp from "./images/pfp.jpg"
+import { LeaderboardRow } from "@/components/LeaderboardRow";
+import { StatPill } from "@/components/StatPill";
+import { FeatureCard } from "@/components/FeatureCard";
 const AVALANCHE_RED = "#E84142";
-const AVALANCHE_DARK = "#050608";
-const AVALANCHE_DARK_CARD = "#111318";
-const AVALANCHE_BORDER = "#1F222A";
+
 
 export default function Home() {
   return (
@@ -38,26 +39,16 @@ export default function Home() {
             </h1>
 
             <p className="mx-auto max-w-2xl text-sm text-neutral-300 md:text-base">
-              avax.exe is the **home base for players of Avalanche‑powered
-              worlds** like Off The Grid, Shrapnel, and DeFi Kingdoms. Discover
+              Avax.exe is the home base for players of Avalanche‑powered
+              worlds like Off The Grid, Shrapnel, and DeFi Kingdoms. Discover
               new games, climb cross‑game leaderboards, chat with squads, and
               let AI surface the next session you&apos;ll fall in love with.
             </p>
 
             <div className="flex flex-col items-center justify-center gap-3 pt-2 md:flex-row md:gap-4">
-              {/* <button
-                className="w-full rounded-full px-6 py-3 text-sm font-semibold text-black shadow-lg shadow-red-500/40 md:w-auto"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #FF6767 0%, #E84142 40%, #FFB199 100%)",
-                }}
-              >
-                Start as an Avalanche player
-              </button> */}
-              <ContentButton >Start as an Avalanche Player</ContentButton>
-              <button className="w-full rounded-full border border-neutral-700 bg-neutral-950/60 px-6 py-3 text-sm font-medium text-neutral-100 hover:border-neutral-500 hover:bg-neutral-900 md:w-auto">
-                I&apos;m a game studio / builder
-              </button>
+              <ContentButton bold={true}>Start as an Avalanche Player</ContentButton>
+              <ContentButton bold={false}>I&apos;m a game studio / builder</ContentButton>
+
             </div>
 
             <p className="text-xs text-neutral-500">
@@ -93,7 +84,10 @@ export default function Home() {
         >
           <SectionLabel>Everything in one Avalanche‑native hub</SectionLabel>
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-            Discover, compete, connect — without leaving the Avalanche universe.
+            Discover, compete, connect — without leaving the
+            <span className="font-bold">
+                <span style={{ color: AVALANCHE_RED }}> Avalanche Universe</span>
+              </span> 
           </h2>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -179,7 +173,7 @@ export default function Home() {
                   <MiniPill label="Enjoys on‑chain progression" />
                   <MiniPill label="GMT +1 evenings" />
                 </div>
-                <button className="mt-3 w-full rounded-full border border-red-400/70 bg-red-500/20 px-3 py-2 text-xs font-semibold text-red-100 hover:bg-red-500/40">
+                <button className="mt-3 w-full rounded-full cursor-pointer border border-red-400/70 bg-red-500/20 px-3 py-2 text-xs font-semibold text-red-100 hover:bg-red-500/40">
                   Ask avax.exe what to play tonight
                 </button>
               </div>
@@ -223,10 +217,10 @@ export default function Home() {
               <span className="text-right">MMR</span>
               <span className="text-right">Winrate</span>
             </div>
-            <LeaderboardRow rank={1} name="0xGridMaster" mmr="2,431" wr="68%" />
-            <LeaderboardRow rank={2} name="NovaFragger" mmr="2,210" wr="64%" />
-            <LeaderboardRow rank={3} name="ShrapnelStorm" mmr="2,098" wr="61%" />
-            <LeaderboardRow rank={12} name="you.core.avax" mmr="1,621" wr="55%" highlight />
+            <LeaderboardRow rank={1} name="0xGridMaster" mmr="2,431" wr="68%" imageUrl={pfp}/>
+            <LeaderboardRow rank={2} name="NovaFragger" mmr="2,210" wr="64%" imageUrl={pfp} />
+            <LeaderboardRow rank={3} name="ShrapnelStorm" mmr="2,098" wr="61%" imageUrl={pfp} />
+            <LeaderboardRow rank={12} name="you.core.avax" mmr="1,621" wr="55%" highlight imageUrl={pfp} />
           </div>
         </section>
 
@@ -255,7 +249,7 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-neutral-100">#global‑avax</span>
                 <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] text-green-300">
-                  1,248 online
+                  988 online
                 </span>
               </div>
               <div className="space-y-2 text-[11px] text-neutral-200">
@@ -268,21 +262,22 @@ export default function Home() {
                 </p>
                 <p>
                   <span className="font-semibold text-neutral-50">
-                    defi_king
+                    defi_lord
                   </span>{" "}
                   <span className="text-neutral-500">•</span>{" "}
                   need one more for AVAX farming run 🌾
                 </p>
                 <p>
-                  <span className="font-semibold text-red-300">
+                  <span className="font-semibold text-red-500">
                     you.core.avax
                   </span>{" "}
                   <span className="text-neutral-500">•</span>{" "}
-                  anyone down for Off The Grid ranked in 10?
+                  anyone down for Off The Grid ranked in 10 😎?
                 </p>
               </div>
-              <div className="mt-2 flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-950 px-3 py-2 text-[11px] text-neutral-500">
-                <span className="flex-1">Message #global‑avax…</span>
+              <div className="mt-2 flex justify-between gap-2 rounded-full border border-neutral-800 bg-neutral-950 px-3 py-2 text-[11px] text-neutral-500">
+                <input type="text" placeholder="Message #global-avax" className="w-full overflow-hidden text-neutral-50"/>
+                {/* <span className="flex-1">Message #global‑avax…</span> */}
                 <span
                   className="rounded-full px-2 py-0.5 text-[10px] font-medium text-black"
                   style={{ backgroundColor: AVALANCHE_RED }}
@@ -340,81 +335,8 @@ export default function Home() {
 
 /* Small presentational components */
 
-type StatPillProps = {
-  label: string;
-  value: string;
-  caption: string;
-};
 
-function StatPill({ label, value, caption }: StatPillProps) {
-  return (
-    <div className="rounded-2xl border border-neutral-800 bg-black/80 p-4">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-500">
-        {label}
-      </p>
-      <p className="mt-1 text-xl font-semibold text-white">{value}</p>
-      <p className="mt-1 text-xs text-neutral-400">{caption}</p>
-    </div>
-  );
-}
 
-type FeatureCardProps = {
-  title: string;
-  accent: string;
-  description: string;
-  children?: React.ReactNode;
-};
-
-function FeatureCard({ title, accent, description, children }: FeatureCardProps) {
-  return (
-    <div
-      className="flex h-full flex-col justify-between rounded-2xl border p-4"
-      style={{ borderColor: AVALANCHE_BORDER, backgroundColor: AVALANCHE_DARK_CARD }}
-    >
-      <div className="space-y-3">
-        <span className="inline-flex rounded-full bg-red-500/20 px-2 py-0.5 text-[11px] font-medium text-red-200">
-          {accent}
-        </span>
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
-        <p className="text-sm text-neutral-300">{description}</p>
-      </div>
-      {children && <div className="mt-4">{children}</div>}
-    </div>
-  );
-}
-
-type LeaderboardRowProps = {
-  rank: number;
-  name: string;
-  mmr: string;
-  wr: string;
-  highlight?: boolean;
-};
-
-function LeaderboardRow({ rank, name, mmr, wr, highlight }: LeaderboardRowProps) {
-  return (
-    <div
-      className={`grid grid-cols-[1.5fr,0.7fr,0.7fr] items-center gap-2 rounded-xl px-3 py-2 ${
-        highlight
-          ? "bg-red-500/15 text-red-50 border border-red-500/50"
-          : "text-neutral-200 hover:bg-neutral-900/70"
-      }`}
-    >
-      <div className="flex items-center gap-2">
-        <span
-          className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${
-            highlight ? "bg-red-500/80 text-black" : "bg-neutral-900 text-neutral-200"
-          }`}
-        >
-          {rank}
-        </span>
-        <span className="truncate text-xs font-medium">{name}</span>
-      </div>
-      <span className="text-right text-xs">{mmr}</span>
-      <span className="text-right text-xs">{wr}</span>
-    </div>
-  );
-}
 
 type SectionLabelProps = {
   children: React.ReactNode;

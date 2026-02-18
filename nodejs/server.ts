@@ -1,13 +1,12 @@
 import express from "express"
-import logger from "./src/logging/logger"
+import Fastify from "fastify"
+import logger from "./src/utils/logger"
 import helmet from "helmet";
 
-const app = express();
+export const app = Fastify({logger : true})
 
-app.use(helmet())
-app.use(express.urlencoded())
-app.use(express.json());
-
-app.listen(4050, () => {
-    logger.info("SERVER RUNNING ON PORT 4050")
+app.listen({port : 4050}, function(err , address){
+    if(err){
+        logger.info(`${err}`)
+    }
 })
