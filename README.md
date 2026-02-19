@@ -1,5 +1,7 @@
+# Avax.exe
+
 The executable layer for Avalanche gaming identity
-___
+
 Avax.exe is a unified, gaming platform for games built on [Avalanche](https://www.avax.network/)
 Games built on avalanche are built on many L1s hosted by Avax, hence there is no single way to bring gamers from this L1s together, until now.
 
