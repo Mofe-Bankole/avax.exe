@@ -1,2 +1,3 @@
 v1.0.0
-    Dock
+    Docker build configured
+    MVP UI desgined
