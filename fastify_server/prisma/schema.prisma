@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  bio       String?
+  avatar    String? // store URL instead of Bytes
+  socials   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  catalogue Game[]     @relation("UserCatalogue")
+  platforms Platform[] @relation("UserPlatforms")
+
+  sentFriends     Friend[] @relation("SentFriend")
+  receivedFriends Friend[] @relation("ReceivedFriend")
+}
+
+model Friend {
+  id         String       @id @default(uuid())
+  sender     User         @relation("SentFriend", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User         @relation("ReceivedFriend", fields: [receiverId], references: [id])
+  receiverId String
+  status     FriendStatus @default(PENDING)
+  createdAt  DateTime     @default(now())
+
+  @@unique([senderId, receiverId])
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+model Game {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  release     DateTime?
+  studio      String?
+  owner       User?     @relation("UserCatalogue", fields: [ownerId], references: [id])
+  ownerId     String?
+  tags        Tag[]     @relation("GameTags")
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  info  String
+  color String
+  games Game[] @relation("GameTags")
+}
+
+model Platform {
+  id    String       @id @default(uuid())
+  name  String
+  added DateTime     @default(now())
+  type  PlatformType
+  icon  String
+  users User[]       @relation("UserPlatforms")
+}
+
+enum PlatformType {
+  CONSOLE
+  PC
+}

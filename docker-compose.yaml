@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: avax_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: mofebanks
+      POSTGRES_PASSWORD: avax0001001
+      POSTGRES_DB: avax_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:  
+  pgdata:
