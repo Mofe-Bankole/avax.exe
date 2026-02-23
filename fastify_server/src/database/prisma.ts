@@ -4,8 +4,6 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import logger from "../utils/logger";
 import { IUser } from "../types/types";
 
-// Use pg adapter for direct TCP connection to local PostgreSQL. Do not use
-// @prisma/adapter-ppg — that one is for Prisma Postgres (HTTP) only.
 const connectionString =
   config.postgres?.connection_string ||
   process.env.DATABASE_URL
@@ -18,7 +16,14 @@ prisma.$connect()
   .catch((err) => logger.error(err, "PRISMA CONNECTION FAILED"));
 
 export async function saveUser(model: IUser) :  Promise<any>{
-    const user = await prisma.user.create({ data: { username: model.username, id: model.id, email :  model.email , avatarUrl : model.avatarUrl, bio : model.bio } });
+    // Generate a complex unique ID using date, time, and random bytes
+    const id = [
+        Date.now(), // milliseconds since epoch
+        process.hrtime.bigint().toString(), // nanosecond precision
+        Math.floor(Math.random() * 1e8).toString(36) // random base36 segment for more uniqueness
+    ].join("_");
+
+    const user = await prisma.user.create({ data: { username: model.username, id: id, email :  model.email , avatar : model.avatar, bio : model.bio , walletAddress : model.walletAddress} });
     logger.info("USER CREATED");
 
     if (!user){
@@ -28,7 +33,7 @@ export async function saveUser(model: IUser) :  Promise<any>{
             date : Date.now.toString()
         }
     }
-
+    
     return {
         success : true,
         action : "insert",
@@ -37,7 +42,7 @@ export async function saveUser(model: IUser) :  Promise<any>{
 }
 
 export async function getAllUsers() {
-  return prisma.user.findFirst()
+  return prisma.user.findMany()
 }
 
 export function editUser() { }

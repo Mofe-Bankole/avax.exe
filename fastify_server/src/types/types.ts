@@ -23,13 +23,11 @@ export type Config = {
 //////////////////////
 
 export interface IUser {
-  id: string;
   username: string;
   email: string;
-  avatarUrl?: string;
+  avatar?: string;
   bio?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  walletAddress : string
 }
 
 //////////////////////

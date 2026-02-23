@@ -13,249 +13,177 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  email     String   @unique
-  avatarUrl String?
-  bio       String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+//////////////////////////
+// ENUMS
+//////////////////////////
 
-  // Socials
-  socials Social[]
-
-  // Friends
-  sentFriends     Friend[] @relation("SentFriend")
-  receivedFriends Friend[] @relation("ReceivedFriend")
-
-  // Direct 1-1 chat
-  directConversationsOne DirectConversation[] @relation("UserOneConversation")
-  directConversationsTwo DirectConversation[] @relation("UserTwoConversation")
-  directMessages         DirectMessage[]
-
-  // Rooms
-  roomMemberships RoomMember[]
-  roomMessages    RoomMessage[]
-
-  // Games
-  games UserGame[]
-
-  // Tournaments
-  tournamentParticipants TournamentParticipant[]
+enum Role {
+  USER
+  STUDIO
 }
 
-//////////////////////////////////////////////////////
-// SOCIALS
-//////////////////////////////////////////////////////
-
-model Social {
-  id       String         @id @default(uuid())
-  platform SocialPlatform
-  url      String
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  @@unique([platform, userId])
+enum AuthProvider {
+  WALLET
+  EMAIL
+  GOOGLE
+  X
 }
 
 enum SocialPlatform {
   X
   GOOGLE
   SPOTIFY
-  LINKEDIN
-  DISCORD
-  GITHUB
+  WEBSITE
 }
 
-//////////////////////////////////////////////////////
-// FRIEND SYSTEM
-//////////////////////////////////////////////////////
-
-model Friend {
-  id         String       @id @default(uuid())
-  sender     User         @relation("SentFriend", fields: [senderId], references: [id])
-  senderId   String
-  receiver   User         @relation("ReceivedFriend", fields: [receiverId], references: [id])
-  receiverId String
-  status     FriendStatus @default(PENDING)
-  createdAt  DateTime     @default(now())
-
-  @@unique([senderId, receiverId])
-}
-
-enum FriendStatus {
+enum SubmissionStatus {
   PENDING
-  ACCEPTED
-  BLOCKED
+  APPROVED
+  REJECTED
 }
 
-//////////////////////////////////////////////////////
-// DIRECT (WHATSAPP STYLE) CHAT
-//////////////////////////////////////////////////////
+//////////////////////////
+// CORE USER IDENTITY
+//////////////////////////
 
-model DirectConversation {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
+model User {
+  id            String   @id @default(uuid())
+  walletAddress String   @unique
+  username      String   @unique
+  email         String?  @unique
+  avatar        String?
+  bio           String?
+  role          Role     @default(USER)
 
-  userOne   User   @relation("UserOneConversation", fields: [userOneId], references: [id])
-  userOneId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  userTwo   User   @relation("UserTwoConversation", fields: [userTwoId], references: [id])
-  userTwoId String
-
-  messages DirectMessage[]
-
-  @@unique([userOneId, userTwoId])
+  // Relations
+  accounts      Account[]
+  socials       Social[]
+  games         Game[]            @relation("StudioGames")
+  tournaments   Tournament[]      @relation("StudioTournaments")
+  submissions   Submission[]
+  sentMessages  Message[]         @relation("SentMessages")
+  conversationsA Conversation[]   @relation("ParticipantOne")
+  conversationsB Conversation[]   @relation("ParticipantTwo")
 }
 
-model DirectMessage {
-  id        String   @id @default(uuid())
-  content   String
-  createdAt DateTime @default(now())
-  edited    Boolean  @default(false)
+//////////////////////////
+// AUTH METHODS
+//////////////////////////
 
-  conversation   DirectConversation @relation(fields: [conversationId], references: [id])
-  conversationId String
+model Account {
+  id                  String       @id @default(uuid())
+  userId              String
+  provider            AuthProvider
+  providerAccountId   String
+  passwordHash        String?
 
-  sender   User   @relation(fields: [senderId], references: [id])
-  senderId String
+  createdAt           DateTime     @default(now())
 
-  @@index([conversationId])
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
-//////////////////////////////////////////////////////
-// DISCORD-STYLE CHAT ROOMS
-//////////////////////////////////////////////////////
+//////////////////////////
+// SOCIAL LINKS
+//////////////////////////
 
-model ChatRoom {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  type        RoomType
-  createdAt   DateTime @default(now())
+model Social {
+  id        String         @id @default(uuid())
+  userId    String
+  platform  SocialPlatform
+  url       String
 
-  members  RoomMember[]
-  messages RoomMessage[]
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platform])
 }
 
-enum RoomType {
-  PUBLIC
-  PRIVATE
-  TOURNAMENT
-}
-
-model RoomMember {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  room   ChatRoom @relation(fields: [roomId], references: [id])
-  roomId String
-
-  role RoomRole @default(MEMBER)
-
-  @@unique([userId, roomId])
-}
-
-enum RoomRole {
-  ADMIN
-  MODERATOR
-  MEMBER
-}
-
-model RoomMessage {
-  id        String   @id @default(uuid())
-  content   String
-  createdAt DateTime @default(now())
-  edited    Boolean  @default(false)
-
-  sender   User   @relation(fields: [senderId], references: [id])
-  senderId String
-
-  room   ChatRoom @relation(fields: [roomId], references: [id])
-  roomId String
-
-  @@index([roomId])
-}
-
-//////////////////////////////////////////////////////
-// GAMES
-//////////////////////////////////////////////////////
+//////////////////////////
+// GAMES (Owned by Studios)
+//////////////////////////
 
 model Game {
-  id          String    @id @default(uuid())
-  title       String
+  id          String        @id @default(uuid())
+  name        String
   description String?
-  studio      String?
-  releaseDate DateTime?
-  coverUrl    String?
-  createdAt   DateTime  @default(now())
+  studioId    String
 
-  owners      UserGame[]
-  tags        GameTag[]
+  createdAt   DateTime      @default(now())
+
+  studio      User          @relation("StudioGames", fields: [studioId], references: [id], onDelete: Cascade)
   tournaments Tournament[]
 }
 
-model UserGame {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  game   Game   @relation(fields: [gameId], references: [id])
-  gameId String
-
-  addedAt    DateTime @default(now())
-  skillLevel Int?
-
-  @@unique([userId, gameId])
-}
-
-model Tag {
-  id    String  @id @default(uuid())
-  name  String  @unique
-  color String?
-
-  games GameTag[]
-}
-
-model GameTag {
-  id     String @id @default(uuid())
-  game   Game   @relation(fields: [gameId], references: [id])
-  gameId String
-
-  tag   Tag    @relation(fields: [tagId], references: [id])
-  tagId String
-
-  @@unique([gameId, tagId])
-}
-
-//////////////////////////////////////////////////////
+//////////////////////////
 // TOURNAMENTS
-//////////////////////////////////////////////////////
+//////////////////////////
 
 model Tournament {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  startDate   DateTime
-  endDate     DateTime
-  createdAt   DateTime @default(now())
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  reward      String?
+  startsAt    DateTime
+  endsAt      DateTime
 
-  game   Game   @relation(fields: [gameId], references: [id])
-  gameId String
+  gameId      String
+  studioId    String
 
-  participants TournamentParticipant[]
+  createdAt   DateTime      @default(now())
+
+  game        Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  studio      User          @relation("StudioTournaments", fields: [studioId], references: [id], onDelete: Cascade)
+  submissions Submission[]
 }
 
-model TournamentParticipant {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+//////////////////////////
+// SUBMISSIONS (No media yet)
+//////////////////////////
 
-  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+model Submission {
+  id           String           @id @default(uuid())
   tournamentId String
+  userId       String
+  proofText    String
+  status       SubmissionStatus @default(PENDING)
 
-  @@unique([userId, tournamentId])
+  createdAt    DateTime         @default(now())
+
+  tournament   Tournament       @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, userId])
+}
+
+//////////////////////////
+// 1v1 CHAT
+//////////////////////////
+
+model Conversation {
+  id               String    @id @default(uuid())
+  participantOneId String
+  participantTwoId String
+  createdAt        DateTime  @default(now())
+
+  participantOne   User      @relation("ParticipantOne", fields: [participantOneId], references: [id], onDelete: Cascade)
+  participantTwo   User      @relation("ParticipantTwo", fields: [participantTwoId], references: [id], onDelete: Cascade)
+
+  messages         Message[]
+
+  @@unique([participantOneId, participantTwoId])
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime @default(now())
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
 }

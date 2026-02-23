@@ -5,12 +5,22 @@ import { authRoutes } from "./src/routes/auth.routes";
 
 
 const app = Fastify({ logger: true });
-// ValidateEnv()
+const date = Intl.DateTimeFormat("EN-NG" , {hour : "2-digit" , minute : "2-digit" , second : "2-digit"})
 app.listen({ port: 4070 }, function (err, address) {
   if (err) {
     logger.info(`${err}`);
   }
 });
+
+app.get("/api/v1/health" , (req , res) => {
+  return res.status(200).send({
+    success : true,
+    message : "Avax.exe Health Route",
+    date : date.format(),
+    build : "v1",
+    ip : req.ip
+  })
+})
 
 app.register(authRoutes)
 app.printRoutes()
