@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { app } from "../../server";
 import { PrismaClient } from "../generated/prisma";
 
@@ -26,3 +27,15 @@ app.post("/api/v1/games/update-score", async (req, res) => {
         return res.status(500).send({ success: false, error: (error as Error).message });
     }
 });
+=======
+import { FastifyInstance } from "fastify";
+
+// import { app } from "../../server";
+export async function fetchAllTitles(app : FastifyInstance) {
+    app.get("/api/v1/avalanche/titles" , async(req , res) => {
+
+    });
+    app.get("/api/v1/avalanche/[game]" , async(req , res) => {});
+    app.post("/api/v1/avalanche/title" , async(req , res) => {});
+}
+>>>>>>> origin/prisma_v1

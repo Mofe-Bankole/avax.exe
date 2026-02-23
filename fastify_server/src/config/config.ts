@@ -15,5 +15,7 @@ export const config: Config = {
   },
   postgres : {
     connection_string : process.env.DATABASE_URL as string
-  }
+  },
+  max_requests : process.env.RATE_LIMIT_WINDOWS_MS as string,
+  window_ms: process.env.WINDOWS_MS as string
 };
