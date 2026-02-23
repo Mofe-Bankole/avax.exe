@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Chat from "@/components/Chat";
 import Leaderboard from "@/components/Leaderboard";
+import TournamentList from "@/components/TournamentList";
 import React from "react";
 import pfp from "./images/pfp.jpg"
 import { LeaderboardRow } from "@/components/LeaderboardRow";
@@ -126,6 +127,12 @@ export default function Home() {
                 <li>– Status: grinding ranked, chilling, LFG</li>
               </ul>
             </FeatureCard>
+          </div>
+
+          <div className="mt-16 space-y-6">
+            <SectionLabel tone="red">Active Tournaments</SectionLabel>
+            <h3 className="text-xl font-bold md:text-2xl italic tracking-tight">Compete for Avalanche Rewards</h3>
+            <TournamentList />
           </div>
         </section>
 

@@ -67,6 +67,33 @@ model User {
   sentMessages  Message[]         @relation("SentMessages")
   conversationsA Conversation[]   @relation("ParticipantOne")
   conversationsB Conversation[]   @relation("ParticipantTwo")
+  hubs          Hub[]             @relation("HubMembers")
+}
+
+//////////////////////////
+// HUBS & COMMUNITIES
+//////////////////////////
+
+model Hub {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isGlobal    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  members     User[]   @relation("HubMembers")
+  messages    HubMessage[]
+}
+
+model HubMessage {
+  id        String   @id @default(uuid())
+  hubId     String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  hub       Hub      @relation(fields: [hubId], references: [id], onDelete: Cascade)
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 //////////////////////////
