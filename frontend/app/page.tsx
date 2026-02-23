@@ -1,6 +1,6 @@
-// frontend/app/page.tsx
-import ContentButton from "@/components/ContentButton";
 import Header from "@/components/Header";
+import Chat from "@/components/Chat";
+import Leaderboard from "@/components/Leaderboard";
 import React from "react";
 import pfp from "./images/pfp.jpg"
 import { LeaderboardRow } from "@/components/LeaderboardRow";
@@ -15,7 +15,7 @@ export default function Home() {
       className="min-h-screen text-white main_body"
     >
       {/* Header */}
-    <Header/>
+      <Header />
       {/* Hero – centered above the fold */}
       <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 md:pt-20">
         <section className="flex flex-col items-center justify-center gap-10 text-center md:min-h-[60vh]">
@@ -86,8 +86,8 @@ export default function Home() {
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
             Discover, compete, connect — without leaving the
             <span className="font-bold">
-                <span style={{ color: AVALANCHE_RED }}> Avalanche Universe</span>
-              </span> 
+              <span style={{ color: AVALANCHE_RED }}> Avalanche Universe</span>
+            </span>
           </h2>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -203,25 +203,7 @@ export default function Home() {
             </ul>
           </div>
 
-          <div className="space-y-4 rounded-2xl border border-neutral-800 bg-gradient-to-br from-neutral-900/80 via-black to-neutral-950 p-4 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-500">
-                LIVE BOARD — OFF THE GRID
-              </span>
-              <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-medium text-red-200">
-                Season 2 • Ranked
-              </span>
-            </div>
-            <div className="mt-3 grid grid-cols-[1.5fr,0.7fr,0.7fr] gap-2 border-b border-neutral-800 pb-2 text-[11px] text-neutral-400">
-              <span>Player</span>
-              <span className="text-right">MMR</span>
-              <span className="text-right">Winrate</span>
-            </div>
-            <LeaderboardRow rank={1} name="0xGridMaster" mmr="2,431" wr="68%" imageUrl={pfp}/>
-            <LeaderboardRow rank={2} name="NovaFragger" mmr="2,210" wr="64%" imageUrl={pfp} />
-            <LeaderboardRow rank={3} name="ShrapnelStorm" mmr="2,098" wr="61%" imageUrl={pfp} />
-            <LeaderboardRow rank={12} name="you.core.avax" mmr="1,621" wr="55%" highlight imageUrl={pfp} />
-          </div>
+          <Leaderboard gameId="off-the-grid" gameName="Off The Grid" />
         </section>
 
         {/* Social & chat */}
@@ -245,91 +227,52 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="space-y-3 rounded-2xl border border-neutral-800 bg-black/80 p-4 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-neutral-100">#global‑avax</span>
-                <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] text-green-300">
-                  988 online
-                </span>
-              </div>
-              <div className="space-y-2 text-[11px] text-neutral-200">
-                <p>
-                  <span className="font-semibold text-neutral-50">
-                    shrapnel_mint
-                  </span>{" "}
-                  <span className="text-neutral-500">•</span>{" "}
-                  queueing customs, LFG for 3 more 🧨
-                </p>
-                <p>
-                  <span className="font-semibold text-neutral-50">
-                    defi_lord
-                  </span>{" "}
-                  <span className="text-neutral-500">•</span>{" "}
-                  need one more for AVAX farming run 🌾
-                </p>
-                <p>
-                  <span className="font-semibold text-red-500">
-                    you.core.avax
-                  </span>{" "}
-                  <span className="text-neutral-500">•</span>{" "}
-                  anyone down for Off The Grid ranked in 10 😎?
-                </p>
-              </div>
-              <div className="mt-2 flex justify-between gap-2 rounded-full border border-neutral-800 bg-neutral-950 px-3 py-2 text-[11px] text-neutral-500">
-                <input type="text" placeholder="Message #global-avax" className="w-full overflow-hidden text-neutral-50"/>
-                {/* <span className="flex-1">Message #global‑avax…</span> */}
-                <span
-                  className="rounded-full px-2 py-0.5 text-[10px] font-medium text-black"
-                  style={{ backgroundColor: AVALANCHE_RED }}
-                >
-                  Send
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Builder / dev callout */}
-        <section className="mt-20 space-y-6 rounded-3xl border border-neutral-800 bg-gradient-to-r from-black via-neutral-900 to-black p-6 md:flex md:items-center md:justify-between md:space-y-0 md:p-8">
-          <div className="max-w-xl space-y-3">
-            <SectionLabel tone="subtle">For Avalanche builders</SectionLabel>
-            <h2 className="text-xl font-semibold md:text-2xl">
-              Plug your game into a social layer that already feels native.
-            </h2>
-            <p className="text-sm text-neutral-300">
-              Add your Avalanche game to avax.exe to reach players who are
-              already exploring, chatting and theory‑crafting on‑chain. We&apos;ll
-              surface your leaderboards, events and patch notes in an interface
-              they already know.
-            </p>
-          </div>
-          <button className="mt-4 w-full rounded-full border border-red-500/70 bg-red-500/20 px-5 py-2.5 text-sm font-semibold text-red-100 hover:bg-red-500/35 md:mt-0 md:w-auto">
-            List my game on avax.exe
-          </button>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-neutral-900 bg-black/80">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 text-xs text-neutral-500 md:flex-row md:items-center md:justify-between">
-          <span>
-            avax.exe is an independent Avalanche‑native social hub for gamers.
-          </span>
-          <div className="flex flex-wrap items-center gap-4">
-            <span className="text-neutral-600">Soon:</span>
-            <span className="rounded-full border border-neutral-700 px-3 py-1 text-[11px] text-neutral-200">
-              iOS companion
-            </span>
-            <span className="rounded-full border border-neutral-700 px-3 py-1 text-[11px] text-neutral-200">
-              Android companion
-            </span>
-            <span className="rounded-full border border-neutral-700 px-3 py-1 text-[11px] text-neutral-200">
-              Creator tools
-            </span>
+            <Chat />
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Builder / dev callout */}
+      <section className="mt-20 space-y-6 rounded-3xl border border-neutral-800 bg-gradient-to-r from-black via-neutral-900 to-black p-6 md:flex md:items-center md:justify-between md:space-y-0 md:p-8">
+        <div className="max-w-xl space-y-3">
+          <SectionLabel tone="subtle">For Avalanche builders</SectionLabel>
+          <h2 className="text-xl font-semibold md:text-2xl">
+            Plug your game into a social layer that already feels native.
+          </h2>
+          <p className="text-sm text-neutral-300">
+            Add your Avalanche game to avax.exe to reach players who are
+            already exploring, chatting and theory‑crafting on‑chain. We&apos;ll
+            surface your leaderboards, events and patch notes in an interface
+            they already know.
+          </p>
+        </div>
+        <button className="mt-4 w-full rounded-full border border-red-500/70 bg-red-500/20 px-5 py-2.5 text-sm font-semibold text-red-100 hover:bg-red-500/35 md:mt-0 md:w-auto">
+          List my game on avax.exe
+        </button>
+      </section>
+    </main>
+
+      {/* Footer */ }
+  <footer className="border-t border-neutral-900 bg-black/80">
+    <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 text-xs text-neutral-500 md:flex-row md:items-center md:justify-between">
+      <span>
+        avax.exe is an independent Avalanche‑native social hub for gamers.
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="text-neutral-600">Soon:</span>
+        <span className="rounded-full border border-neutral-700 px-3 py-1 text-[11px] text-neutral-200">
+          iOS companion
+        </span>
+        <span className="rounded-full border border-neutral-700 px-3 py-1 text-[11px] text-neutral-200">
+          Android companion
+        </span>
+        <span className="rounded-full border border-neutral-700 px-3 py-1 text-[11px] text-neutral-200">
+          Creator tools
+        </span>
+      </div>
     </div>
+  </footer>
+    </div >
   );
 }
 

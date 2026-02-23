@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -5,52 +11,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-<<<<<<< HEAD
-model User {
-  id            String   @id @default(uuid())
-  walletAddress String   @unique // Primary Identity
-  username      String?  // Optional display name
-  joinedHubs    Hub[]
-  scores        Score[]
-}
-  
-model Hub {
-  id          String   @id @default(uuid())
-  name        String   // e.g. "Off The Grid"
-  gameId      String   @unique
-  messages    Message[] // *Assuming Message model exists for chat*
-  users       User[]
-}
-
-model Message {
-  id        String   @id @default(uuid())
-  content   String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  hub       Hub      @relation(fields: [hubId], references: [id])
-  hubId     String
-}
-  
-model Game {
-  id          String   @id @default(uuid())
-  name        String
-  apiKey      String   @unique // Public Key for Game Devs
-  secretKey   String   // Private Key (Simulated for demo)
-  hub         Hub?     @relation(fields: [hubId], references: [id])
-  hubId       String?  @unique
-}
-  
-model Score {
-  id          String   @id @default(uuid())
-  value       Int
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  gameId      String
-=======
 //////////////////////////
 // ENUMS
 //////////////////////////
@@ -213,7 +175,6 @@ model Conversation {
   messages         Message[]
 
   @@unique([participantOneId, participantTwoId])
->>>>>>> origin/prisma_v1
 }
 
 model Message {
