@@ -23,8 +23,6 @@ enum Role {
 }
 
 enum AuthProvider {
-  WALLET
-  EMAIL
   GOOGLE
   X
 }
@@ -43,46 +41,53 @@ enum SubmissionStatus {
 }
 
 //////////////////////////
-// CORE USER IDENTITY
+// USER
 //////////////////////////
 
 model User {
-  id            String   @id @default(uuid())
-  walletAddress String   @unique
-  username      String   @unique
-  email         String?  @unique
+  id            String  @id @default(uuid())
+  walletAddress String  @unique
+  username      String  @unique
+  email         String? @unique
+  passwordHash  String?
   avatar        String?
   bio           String?
-  role          Role     @default(USER)
+  role          Role    @default(USER)
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  accounts      Account[]
-  socials       Social[]
-  games         Game[]            @relation("StudioGames")
-  tournaments   Tournament[]      @relation("StudioTournaments")
-  submissions   Submission[]
-  sentMessages  Message[]         @relation("SentMessages")
-  conversationsA Conversation[]   @relation("ParticipantOne")
-  conversationsB Conversation[]   @relation("ParticipantTwo")
+  accounts    Account[]
+  socials     Social[]
+  games       Game[]
+  tournaments Tournament[]
+  submissions Submission[]
+
+  // 1v1 Chat
+  sentMessages   Message[]
+  conversationsA Conversation[] @relation("ParticipantOne")
+  conversationsB Conversation[] @relation("ParticipantTwo")
+
+  // Chat Rooms
+  memberships  ChatRoomMember[]
+  roomMessages ChatRoomMessage[]
+  chatRooms    ChatRoom[]
 }
 
 //////////////////////////
-// AUTH METHODS
+// OAUTH ACCOUNTS
 //////////////////////////
 
 model Account {
-  id                  String       @id @default(uuid())
-  userId              String
-  provider            AuthProvider
-  providerAccountId   String
-  passwordHash        String?
+  id                String       @id @default(uuid())
+  userId            String
+  provider          AuthProvider
+  providerAccountId String
 
-  createdAt           DateTime     @default(now())
+  createdAt DateTime @default(now())
 
-  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -92,29 +97,29 @@ model Account {
 //////////////////////////
 
 model Social {
-  id        String         @id @default(uuid())
-  userId    String
-  platform  SocialPlatform
-  url       String
+  id       String         @id @default(uuid())
+  userId   String
+  platform SocialPlatform
+  url      String
 
-  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, platform])
 }
 
 //////////////////////////
-// GAMES (Owned by Studios)
+// GAMES
 //////////////////////////
 
 model Game {
-  id          String        @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
   studioId    String
 
-  createdAt   DateTime      @default(now())
+  createdAt DateTime @default(now())
 
-  studio      User          @relation("StudioGames", fields: [studioId], references: [id], onDelete: Cascade)
+  studio      User         @relation(fields: [studioId], references: [id], onDelete: Cascade)
   tournaments Tournament[]
 }
 
@@ -123,25 +128,25 @@ model Game {
 //////////////////////////
 
 model Tournament {
-  id          String        @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   description String
   reward      String?
   startsAt    DateTime
   endsAt      DateTime
 
-  gameId      String
-  studioId    String
+  gameId   String
+  studioId String
 
-  createdAt   DateTime      @default(now())
+  createdAt DateTime @default(now())
 
-  game        Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  studio      User          @relation("StudioTournaments", fields: [studioId], references: [id], onDelete: Cascade)
+  game        Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  studio      User         @relation(fields: [studioId], references: [id], onDelete: Cascade)
   submissions Submission[]
 }
 
 //////////////////////////
-// SUBMISSIONS (No media yet)
+// SUBMISSIONS
 //////////////////////////
 
 model Submission {
@@ -151,10 +156,10 @@ model Submission {
   proofText    String
   status       SubmissionStatus @default(PENDING)
 
-  createdAt    DateTime         @default(now())
+  createdAt DateTime @default(now())
 
-  tournament   Tournament       @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([tournamentId, userId])
 }
@@ -164,15 +169,15 @@ model Submission {
 //////////////////////////
 
 model Conversation {
-  id               String    @id @default(uuid())
+  id               String   @id @default(uuid())
   participantOneId String
   participantTwoId String
-  createdAt        DateTime  @default(now())
+  createdAt        DateTime @default(now())
 
-  participantOne   User      @relation("ParticipantOne", fields: [participantOneId], references: [id], onDelete: Cascade)
-  participantTwo   User      @relation("ParticipantTwo", fields: [participantTwoId], references: [id], onDelete: Cascade)
+  participantOne User @relation("ParticipantOne", fields: [participantOneId], references: [id], onDelete: Cascade)
+  participantTwo User @relation("ParticipantTwo", fields: [participantTwoId], references: [id], onDelete: Cascade)
 
-  messages         Message[]
+  messages Message[]
 
   @@unique([participantOneId, participantTwoId])
 }
@@ -184,6 +189,46 @@ model Message {
   content        String
   createdAt      DateTime @default(now())
 
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+//////////////////////////
+// DISCORD-STYLE CHAT ROOMS
+//////////////////////////
+
+model ChatRoom {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdById String
+  createdAt   DateTime @default(now())
+
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  members  ChatRoomMember[]
+  messages ChatRoomMessage[]
+}
+
+model ChatRoomMember {
+  id       String   @id @default(uuid())
+  userId   String
+  roomId   String
+  joinedAt DateTime @default(now())
+
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+}
+
+model ChatRoomMessage {
+  id        String   @id @default(uuid())
+  roomId    String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
