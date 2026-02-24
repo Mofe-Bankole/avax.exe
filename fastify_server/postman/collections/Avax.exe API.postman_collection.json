@@ -115,10 +115,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"0xtokito\",\n  \"email\": \"tokitoiscool@example.com\",\n  \"avatar\": \"https://x.com/Mofe_bnks/photo\",\n  \"bio\": \"Avid gamer and tournament enthusiast and apex legends\",\n  \"walletAddress\" : \"0xf59c70c61eE85131555B18d8176ad512E24a8b12\"\n}"
+              "raw": "{\n    \"username\": \"0xvoidoo\",\n    \"email\": \"imjustavoid@example.com\",\n    \"avatar\": \"https://x.com/0xtokito/photo\",\n    \"bio\": \"Avid gamer and tournament enthusiast and apex legends\",\n    \"walletAddress\": \"0x1234567890\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/v1/auth/internal/join",
+              "raw": "{{baseUrl}}/api/v1/auth/internal/signup",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -127,7 +127,7 @@
                 "v1",
                 "auth",
                 "internal",
-                "join"
+                "signup"
               ]
             },
             "description": "Registers a new user with internal authentication. Expects IUser object with id, username, email, and optional avatarUrl and bio."
@@ -317,10 +317,83 @@
             "description": "Creates a new game title. Expects IGame object. Note: This route is defined but NOT registered in server.ts."
           },
           "response": []
+        },
+        {
+          "name": "Fetch All Titles",
+          "id": "88789a06-20d3-4612-9e11-8f03f17279a7",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4070/api/v1/avalanche/titles",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4070",
+              "path": [
+                "api",
+                "v1",
+                "avalanche",
+                "titles"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "8a802482-d87c-4360-8d3e-3c3f45f3ae41",
       "description": "Game management endpoints. WARNING: These routes are defined in games.routes.ts but the fetchAllTitles function is NOT registered in server.ts."
+    },
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "Get all users",
+          "id": "4e909895-7b9d-4164-b130-e284d2f8d48b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data/development/prisma/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data",
+                "development",
+                "prisma",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific User",
+          "id": "b4036753-2e3f-46de-a433-859bd2cdf450",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/signin/0xf59c70c61eE85131555B18d8176ad512E24a8b12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "signin",
+                "0xf59c70c61eE85131555B18d8176ad512E24a8b12"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "76fcbfe8-934e-439a-8d29-4ddf8e1c51e0"
     }
   ],
   "variable": [

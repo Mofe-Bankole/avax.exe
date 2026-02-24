@@ -26,6 +26,7 @@
     "nodemon": "^3.1.11",
     "pg": "^8.18.0",
     "pino": "^10.3.1",
+    "socket-io": "^1.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
