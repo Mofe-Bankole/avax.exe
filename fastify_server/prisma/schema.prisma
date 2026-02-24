@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -58,21 +58,14 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  accounts    Account[]
-  socials     Social[]
-  games       Game[]
-  tournaments Tournament[]
-  submissions Submission[]
-
-  // 1v1 Chat
-  sentMessages   Message[]
-  conversationsA Conversation[] @relation("ParticipantOne")
-  conversationsB Conversation[] @relation("ParticipantTwo")
-
-  // Chat Rooms
-  memberships  ChatRoomMember[]
-  roomMessages ChatRoomMessage[]
-  chatRooms    ChatRoom[]
+  accounts      Account[]
+  socials       Social[]
+  games         Game[]            @relation("StudioGames")
+  tournaments   Tournament[]      @relation("StudioTournaments")
+  submissions   Submission[]
+  sentMessages  Message[]         @relation("SentMessages")
+  conversationsA Conversation[]   @relation("ParticipantOne")
+  conversationsB Conversation[]   @relation("ParticipantTwo")
 }
 
 //////////////////////////
