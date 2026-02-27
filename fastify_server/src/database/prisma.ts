@@ -222,13 +222,13 @@ export async function addAvalancheSupportedTitle(game: {
   }
   return prisma.game.create({
     data: {
-      id: game.id,
+      // id: game.id,
+      images: game.images,
+      coverUrl: game.coverImage,
+      logo: game.logo,
+      studioId: game.studioId,
       name: game.name,
       description: game.description,
-      coverUrl: game.coverImage,
-      studioId: game.studioId,
-      images: game.images,
-      logo: game.logo,
     },
   });
 }

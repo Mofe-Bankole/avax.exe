@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -42,6 +39,20 @@ enum SubmissionStatus {
   REJECTED
 }
 
+enum GamePlatform {
+  STEAM
+  EPIC_GAMES
+  GOG
+  ITCH_IO
+  PLAYSTATION
+  XBOX
+  NINTENDO
+  APPLE_APPSTORE
+  GOOGLE_PLAY
+  OFFICIAL_SITE
+  OTHER
+}
+
 //////////////////////////
 // CORE USER IDENTITY
 //////////////////////////
@@ -57,6 +68,19 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // -----------------------------------------------
+  // STUDIO-ONLY FIELDS (populated when role = STUDIO)
+  // -----------------------------------------------
+  studioName        String?
+  studioDescription String?
+  studioBannerUrl   String?
+  studioLogoUrl     String?
+  studioWebsite     String?
+  studioTwitter     String?
+  studioInstagram   String?
+  studioDiscord     String?
+  isVerified        Boolean @default(false)
 
   // Relations
   accounts       Account[]
@@ -140,15 +164,24 @@ model Game {
   description String?
   studioId    String
 
-  // New fields
-  images      String[] // Array of image URLs (e.g. screenshots)
-  coverUrl    String?  // URL to the cover image
-  logo        String?  // Additional field as requested ("logo")
+  images   String[]
+  coverUrl String?
+  logo     String?
 
   createdAt DateTime @default(now())
 
   studio      User         @relation("StudioGames", fields: [studioId], references: [id], onDelete: Cascade)
   tournaments Tournament[]
+  links       GameLink[]
+}
+
+model GameLink {
+  id       String       @id @default(uuid())
+  gameId   String
+  platform GamePlatform
+  url      String
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 }
 
 //////////////////////////
@@ -174,7 +207,7 @@ model Tournament {
 }
 
 //////////////////////////
-// SUBMISSIONS (No media yet)
+// SUBMISSIONS
 //////////////////////////
 
 model Submission {

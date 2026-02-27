@@ -41,14 +41,29 @@
           "name": "Get All Users",
           "id": "9026ea53-258e-44dc-8e98-7e1550e5f5eb",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "fbb8a583950dc712a297a010f842d9911c7e38c2bb606e27c2bdff38d8b3f484",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/users",
+              "raw": "{{baseUrl}}/api/v1/data/development/prisma/users",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
+                "v1",
+                "data",
+                "development",
+                "prisma",
                 "users"
               ]
             },
@@ -336,6 +351,38 @@
                 "v1",
                 "avalanche",
                 "titles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a Game",
+          "id": "ad3da0c3-a4d6-48d4-832b-735b8e0a25b5",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"images\" : [],\n    \"id\" : \"1001\",\n    \"coverUrl\" : \"off the grid\",\n    \"logo\" : \"off the gird\",\n    \"studioId\" : \"1772014357948_3182187746483_16c60f\",\n    \"name\" : \"ZA GRIDO\",\n    \"description\" : \"Play in a futuristic PVE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4070/api/v1/avalanche/add",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4070",
+              "path": [
+                "api",
+                "v1",
+                "avalanche",
+                "add"
               ]
             }
           },

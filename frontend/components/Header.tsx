@@ -1,5 +1,7 @@
-import React from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function Header() {
   const AVALANCHE_RED = "#E84142";
@@ -11,14 +13,17 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <div className="flex flex-col leading-tight">
             <span className="text-lg font-bold tracking-tight">
-              avax<span style={{ color: AVALANCHE_RED }}>.exe</span>
+              avx<span style={{ color: AVALANCHE_RED }}>.exe</span>
             </span>
           </div>
         </div>
 
         {/* Navigation + actions */}
         <nav className="hidden items-center gap-6 text-sm text-neutral-300 md:flex">
-          <a href="#features" className="hover:text-white">
+          <a
+            href="#features"
+            className="hover:text-red-400 transition duration-500"
+          >
             Features
           </a>
           <a href="#leaderboards" className="hover:text-white">
@@ -33,7 +38,9 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ConnectButton />
+          <Button variant={"secondary"} className="cursor-pointer cta-button">
+            <Link href={"/signup"}>Sign Up</Link>
+          </Button>
         </div>
       </div>
     </header>

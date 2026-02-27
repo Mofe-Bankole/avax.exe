@@ -8,12 +8,12 @@ export type Config = {
   avalanche: {
     mainnet_rpc: string | undefined;
     testnet_rpc: string | undefined;
-  }
-  postgres : {
-    connection_string : string;
   };
-  max_requests : string
-  window_ms : string
+  postgres: {
+    connection_string: string;
+  };
+  max_requests: string;
+  window_ms: string;
 };
 
 // Prisma schema based on the provided TypeScript types
@@ -27,7 +27,7 @@ export interface IUser {
   email: string;
   avatar?: string;
   bio?: string;
-  walletAddress : string
+  walletAddress: string;
 }
 
 //////////////////////
@@ -158,3 +158,10 @@ export interface IGameTag {
   gameId: string;
   tagId: string;
 }
+
+export type APIErrorResponse = {
+  type: string;
+  error: string;
+  statusCode: number;
+  info: string;
+};
