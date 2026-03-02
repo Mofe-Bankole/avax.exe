@@ -10,6 +10,7 @@ import axios from "axios";
 import { AuthContextValue, User, Session, SignUp } from "@/lib/types";
 
 const context = createContext<AuthContextValue | null>(null);
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL as string;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,13 +21,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:4070/api/v1/auth/internal/signup`,
+        `${BACKEND_URL}/api/v1/auth/internal/signup`,
         { params },
       );
       const { data } = response;
       setSession(data.session);
       setUser(data.user);
-      console.log("SIGNUP SUCCESSFULL");
       return {
         success : true,
         message : "signup successfull"
