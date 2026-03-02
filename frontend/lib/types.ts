@@ -14,11 +14,8 @@ export type User = {
   id: string;
   walletAddress: string;
   email: string;
-  avatar: string;
-  bio: string;
-  role: string;
-  studioName: string;
-  socials: [];
+  avatar?: string;
+  bio?: string;
 };
 
 export type StatPillProps = {
@@ -39,13 +36,20 @@ export type AuthContextValue = {
   loading: boolean;
   error?: string;
   signIn: (walletAddress: string) => Promise<Session>;
-  signUp: (walletAddress: string) => Promise<string>;
+  signUp: (params: SignUp) => Promise< {success: boolean; message: string} >;
   signOut: () => Promise<void>;
 };
 
 export type Session = {
   owner: User;
   token: string;
+};
+export type SignUp = {
+  username: string;
+  walletAddress: string;
+  email: string;
+  avatar?: string;
+  bio?: string;
 };
 
 export type LoginInput = {

@@ -1,3 +1,4 @@
+"use client";
 import React, {
   useCallback,
   useMemo,
@@ -6,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import axios from "axios";
-import { AuthContextValue, User, Session } from "@/lib/types";
+import { AuthContextValue, User, Session, SignUp } from "@/lib/types";
 
 const context = createContext<AuthContextValue | null>(null);
 
@@ -15,20 +16,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const signUp = async (walletAddress: string): Promise<void> => {
+  const signUp = async (params: SignUp): Promise< {success: boolean; message: string} > => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL as string}/api/v1/auth/internal/signup`,
-        { walletAddress },
+        `http://localhost:4070/api/v1/auth/internal/signup`,
+        { params },
       );
       const { data } = response;
       setSession(data.session);
       setUser(data.user);
       console.log("SIGNUP SUCCESSFULL");
-      return;
+      return {
+        success : true,
+        message : "signup successfull"
+      };
     } catch (error) {
       console.error(error);
+      return {
+        success : false,
+        message : "signup unsuccessfull"
+      };
     } finally {
       setLoading(false);
     }
@@ -78,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn,
       signOut,
     }),
-    [session, user, loading, logout],
+    [session, user, loading, signOut],
   );
 
   return React.createElement(context.Provider, { value }, children);
