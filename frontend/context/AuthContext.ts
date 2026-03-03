@@ -17,7 +17,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const signUp = async (params: SignUp): Promise< {success: boolean; message: string} > => {
+  const signUp = async (
+    params: SignUp,
+  ): Promise<{ success: boolean; message: string }> => {
     setLoading(true);
     try {
       const response = await axios.post(
@@ -25,17 +27,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         { params },
       );
       const { data } = response;
-      setSession(data.session);
-      setUser(data.user);
+
+      if (data?.session && data?.user) {
+        const mappedSession: Session = {
+          owner: data.session.owner ?? data.user,
+          token: data.session.token,
+        };
+        setSession(mappedSession);
+        setUser(mappedSession.owner);
+      }
       return {
-        success : true,
-        message : "signup successfull"
+        success: true,
+        message: "signup successfull",
       };
     } catch (error) {
       console.error(error);
       return {
-        success : false,
-        message : "signup unsuccessfull"
+        success: false,
+        message: "signup unsuccessfull",
       };
     } finally {
       setLoading(false);
@@ -46,14 +55,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL as string}/api/login`,
-        { walletAddress },
+        `${BACKEND_URL}/api/v1/auth/signin`,
+        { walletaddr: walletAddress },
       );
       const { data } = response;
-      setSession(data.session);
-      setUser(data.user);
-      const newSession: Session = data.session;
-      return newSession;
+
+      if (!data?.session || !data?.data) {
+        throw new Error("Invalid signin response from server");
+      }
+
+      const mappedSession: Session = {
+        owner: data.session.owner ?? data.data,
+        token: data.session.token,
+      };
+
+      setSession(mappedSession);
+      setUser(mappedSession.owner);
+
+      return mappedSession;
     } catch (error) {
       console.error(error);
       throw error;
@@ -65,9 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = useCallback(async () => {
     setLoading(true);
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL as string}/api/logout`,
-      );
+      // If/when a logout endpoint exists on the backend, call it here.
       setSession(null);
       setUser(null);
     } catch (error) {

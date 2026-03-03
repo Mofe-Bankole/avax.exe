@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 
 type LoginStatus = "idle" | "connecting" | "signing-in" | "success" | "error";
-
 function WalletConnectButton(props: {
   onConnected: (address: string) => void;
   disabled?: boolean;
@@ -89,7 +88,7 @@ export default function GamerLoginPage() {
         await signIn(walletAddress);
         setStatus("success");
         setMessage("Signed in. Redirecting you to avax.exe…");
-        router.push("/");
+        router.push("/dashboard");
       } catch (err) {
         console.error(err);
         setStatus("error");

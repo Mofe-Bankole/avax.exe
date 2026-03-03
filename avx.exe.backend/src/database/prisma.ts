@@ -2,7 +2,8 @@ import { config } from "../config/config";
 import { Prisma, PrismaClient } from "../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import logger from "../utils/logger";
-import { EditProfileInput, IUser } from "../types/types";
+import { EditProfileInput, IUser,  GameStudio } from "../types/types";
+import { date } from "../utils/date.utils";
 
 const connectionString =
   config.postgres?.connection_string || process.env.DATABASE_URL;
@@ -83,6 +84,18 @@ export async function saveUser(model: IUser): Promise<any> {
       bio: model.bio,
       walletAddress: model.walletAddress,
     },
+    select: {
+      id: true,
+      walletAddress: true,
+      username: true,
+      email: true,
+      avatar: true,
+      bio: true,
+      role: true,
+      isVerified: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   logger.info("USER CREATED SUCCESSFULLY");
 
@@ -91,6 +104,8 @@ export async function saveUser(model: IUser): Promise<any> {
       success: false,
       action: "insert",
       date: Date.now.toString(),
+      user: null,
+      error: "Failed to create user",
     };
   }
 
@@ -98,6 +113,8 @@ export async function saveUser(model: IUser): Promise<any> {
     success: true,
     action: "insert",
     date: Date.now.toString(),
+    user,
+    error: null,
   };
 }
 
@@ -236,14 +253,14 @@ export async function saveMessage({
     });
 
     if (!conversation) {
-      return { success: false, error: "Conversation not found" };
+      return { success: false, error: "Conversation Not found" };
     }
 
     if (
       senderId !== conversation.participantOneId &&
       senderId !== conversation.participantTwoId
     ) {
-      return { success: false, error: "Not a participant in this conversation" };
+      return { success: false, error: "NOT A PARTICIPANT" };
     }
 
     const message = await prisma.message.create({
@@ -297,6 +314,7 @@ export async function getTournamentById(id: string) {
   });
 }
 
+
 export async function createSubmission(
   tournamentId: string,
   userId: string,
@@ -321,9 +339,6 @@ export async function updateSubmissionStatus(
   });
 }
 
-export function editUser() {}
-export function deleteUser() {}
-export function addFriend() {}
 
 export async function addAvalancheSupportedTitle(game: {
   id: string;
@@ -352,7 +367,80 @@ export async function addAvalancheSupportedTitle(game: {
 }
 
 export function getAvalancheSupportedTitles() {}
-export function registerGameStudio() {}
+/**
+ * Registers a new game studio.
+ * Accepts an object with required fields for a User with role=STUDIO.
+ * On success returns { success: true, user }, on error returns { success: false, error }
+ *
+ * @param {{
+ *   walletAddress: string,
+ *   username: string,
+ *   email?: string,
+ *   avatar?: string,
+ *   bio?: string,
+ *   studioName: string,
+ *   studioDescription?: string,
+ *   studioBannerUrl?: string,
+ *   studioLogoUrl?: string,
+ *   studioWebsite?: string,
+ *   studioTwitter?: string,
+ *   studioInstagram?: string,
+ *   studioDiscord?: string
+ * }} studio
+ */
+export async function registerGameStudio(studio: GameStudio) {
+  try {
+    const user = await prisma.user.create({
+      data: {
+        walletAddress: studio.walletAddress,
+        username: studio.username,
+        email: studio.email,
+        avatar: studio.avatar,
+        bio: studio.bio,
+        role: "STUDIO",
+        studioName: studio.studioName,
+        studioDescription: studio.studioDescription,
+        studioBannerUrl: studio.studioBannerUrl,
+        studioLogoUrl: studio.studioLogoUrl,
+        studioWebsite: studio.studioWebsite,
+        studioTwitter: studio.studioTwitter,
+        studioInstagram: studio.studioInstagram,
+        studioDiscord: studio.studioDiscord,
+      },
+      select: {
+        id: true,
+        walletAddress: true,
+        username: true,
+        email: true,
+        avatar: true,
+        bio: true,
+        role: true,
+        studioName: true,
+        studioDescription: true,
+        studioBannerUrl: true,
+        studioLogoUrl: true,
+        studioWebsite: true,
+        studioTwitter: true,
+        studioInstagram: true,
+        studioDiscord: true,
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true,
+      }
+    });
+    return { success: true, user , date : date.format() };
+  } catch (error: any) {
+    if (error?.code === "P2002") {
+      // Prisma unique constraint violation
+      return { success: false, error: "Username or wallet address already taken" };
+    }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to register game studio",
+    };
+  }
+}
+
 export function registerTournament() {}
 export function deleteTournament() {}
 export function addUserCatalouge() {}
@@ -371,6 +459,7 @@ export async function getUserStats(walletAddress: string) {
       error : "Wallet Address not Supplied"
     }
   }
+
   const user = await prisma.user.findFirst({
     where: { walletAddress },
     include: {

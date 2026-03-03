@@ -182,3 +182,19 @@ export type EditProfileInput = {
   studioInstagram?: string | null;
   studioDiscord?: string | null;
 };
+
+export type GameStudio = {
+  walletAddress: string;
+  username: string;
+  email?: string;
+  avatar?: string;
+  bio?: string;
+  studioName: string;
+  studioDescription?: string;
+  studioBannerUrl?: string;
+  studioLogoUrl?: string;
+  studioWebsite?: string;
+  studioTwitter?: string;
+  studioInstagram?: string;
+  studioDiscord?: string;
+}

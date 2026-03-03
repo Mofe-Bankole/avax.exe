@@ -135,20 +135,23 @@ export function OnboardingForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccessMessage("");
+    setIsLoading(true);
 
     if (!validateForm()) {
+      setIsLoading(false);
       return;
     }
     try {
-      const data = signUp(formData);
-      if((await data).success){
-        setSuccessMessage((await data).message)
-        setIsLoading(false)
-        router.push("/login")
+      const result = await signUp(formData);
+      if (result.success) {
+        setSuccessMessage(result.message);
+        // After successful signup, send the user straight to the feed/dashboard.
+        router.push("/dashboard");
       }
-      setIsLoading(true);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

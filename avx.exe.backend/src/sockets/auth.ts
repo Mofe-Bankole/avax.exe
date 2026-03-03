@@ -9,12 +9,14 @@ export const socketAuthMiddleware = (
 ) => {
   const token = socket.handshake.auth.token;
   if (!token) {
-    return next(new Error("Authentication error"));
+    return next(new Error("Authentication error : NO TOKEN PROVIDED"));
   }
-  // Validate token and call next(err)
   try {
     const decoded = jwt.verify(token, config.jwt_secret);
+    socket.data.user = decoded;
+    next()
   } catch (err) {
     logger.info(`Error : ${err}`);
+    next(new Error("Authentication error : NO TOKEN PROVIDED"));
   }
 };

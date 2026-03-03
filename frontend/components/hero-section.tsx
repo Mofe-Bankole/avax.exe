@@ -49,7 +49,7 @@ export default function HeroSection() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </a>
             <a
-              href="#builders"
+              href="/builders"
               className="flex items-center gap-2 rounded-full border border-border bg-secondary px-7 py-3 text-sm font-semibold text-secondary-foreground transition-colors hover:border-muted-foreground/40 hover:bg-secondary/80"
             >
               {"I'm a builder / game studio"}

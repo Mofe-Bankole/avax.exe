@@ -2,10 +2,11 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { Prisma } from '../generated/prisma'
+import { prisma } from '../database/prisma'
 
-export default async function friendsRoutes(fastify: FastifyInstance) {
-  fastify.get('/api/v1/friends', {
-    onRequest: [fastify.authenticate], // ← requires JWT / logged in user
+export default async function friendsRoutes(app: FastifyInstance) {
+  app.get('/api/v1/user/friends', {
+    onRequest: [app.authenticate], // ← requires JWT / logged in user
 
     schema: {
       response: {
@@ -28,13 +29,13 @@ export default async function friendsRoutes(fastify: FastifyInstance) {
         401: z.object({ success: z.literal(false), error: z.string() }),
       },
     },
-  }, async (request, reply) => {
+  }, async (request, response) => {
     // @ts-expect-error – jwtVerify adds user to request
     const currentUserId = request.user.sub
 
     try {
       // Find all conversations where current user is participant A or B
-      const conversations = await Prisma.conversation.findMany({
+      const conversations = await prisma.conversation.findMany({
         where: {
           OR: [
             { participantOneId: currentUserId },
@@ -80,9 +81,9 @@ export default async function friendsRoutes(fastify: FastifyInstance) {
       const friends = conversations
         .map((conv) => {
           const other =
-            conv.participantOne.id === currentUserId
-              ? conv.participantTwo
-              : conv.participantOne
+            conv.participantOneId === currentUserId
+              ? conv.participantTwoId
+              : conv.participantOneId
 
           return {
             id: other.id,
@@ -90,7 +91,7 @@ export default async function friendsRoutes(fastify: FastifyInstance) {
             walletAddress: other.walletAddress,
             avatar: other.avatar,
             bio: other.bio,
-            lastMessageAt: conv.messages[0]?.createdAt ?? conv.createdAt,
+            lastMessageAt: conv.message[0]?.createdAt ?? conv.createdAt,
           }
         })
         // Optional: filter out invalid/empty entries
@@ -102,8 +103,8 @@ export default async function friendsRoutes(fastify: FastifyInstance) {
         count: friends.length,
       }
     } catch (err) {
-      fastify.log.error(err)
-      reply.code(500).send({
+      app.log.error(err)
+      response.status(401).send({
         success: false,
         error: 'Failed to fetch friends',
       })
