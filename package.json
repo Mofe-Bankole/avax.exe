@@ -1,0 +1,17 @@
+{
+  "name": "avax.exe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd frontend && npm run dev",
+    "backend" : "cd avax.exe.backend && nodemon server.ts | npx pino-pretty"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {},
+  "devDependencies": {}
+}
