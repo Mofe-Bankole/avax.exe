@@ -56,3 +56,58 @@ export type SignUp = {
 export type LoginInput = {
   walletAddress: string;
 };
+
+export interface MessageItemProps {
+  message: Message;
+  isCurrentUser: boolean;
+}
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  text: string;
+  timestamp: number;
+  senderName?: string;
+  senderAvatar?: string;
+}
+
+export interface Conversation {
+  id: string;
+  friendId: string;
+  friendName: string;
+  friendAvatar?: string;
+  lastMessage?: string;
+  lastMessageTime?: number;
+  unreadCount?: number;
+}
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  bio?: string;
+  walletAddress: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  studioName?: string;
+  studioDescription?: string;
+  studioBannerUrl?: string;
+  studioLogoUrl?: string;
+  studioWebsite?: string;
+  studioTwitter?: string;
+  studioInstagram?: string;
+  studioDiscord?: string;
+  isVerified: boolean;
+}
+
+export interface UserStats {
+  totalGamesPlayed?: number;
+  leaderboardRank?: number;
+  gamesWon?: number;
+  totalScore?: number;
+  achievementsUnlocked?: number;
+  friendsCount?: number;
+}

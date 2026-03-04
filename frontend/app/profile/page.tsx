@@ -1,52 +1,56 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { getUserProfile, getUserStats, getFriendsList } from '@/lib/chat-api'
-import { type UserProfile, type UserStats, type Conversation } from '@/lib/chat-api'
-import { ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
-import { ProfileHeader } from '@/components/profile/profile-header'
-import { ProfileStats } from '@/components/profile/profile-stats'
-import { ProfileFriends } from '@/components/profile/profile-friends'
+import { useEffect, useState } from "react";
+import { getUserProfile, getUserStats, getFriendsList } from "@/lib/chat-api";
+import {
+  type UserProfile,
+  type UserStats,
+  type Conversation,
+} from "@/lib/types";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { ProfileHeader } from "@/components/profile/profile-header";
+import { ProfileStats } from "@/components/profile/profile-stats";
+import { ProfileFriends } from "@/components/profile/profile-friends";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<UserProfile | null>(null)
-  const [stats, setStats] = useState<UserStats | null>(null)
-  const [friends, setFriends] = useState<Conversation[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [friends, setFriends] = useState<Conversation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        setIsLoading(true)
-        setError(null)
+        setIsLoading(true);
+        setError(null);
 
         // Fetch all data in parallel
         const [profileData, statsData, friendsData] = await Promise.all([
           getUserProfile(),
           getUserStats(),
           getFriendsList(),
-        ])
+        ]);
 
         if (!profileData) {
-          setError('Failed to load profile. Please try again.')
-          return
+          setError("Failed to load profile. Please try again.");
+          return;
         }
 
-        setUser(profileData)
-        setStats(statsData)
-        setFriends(friendsData || [])
+        setUser(profileData);
+        setStats(statsData);
+        setFriends(friendsData || []);
       } catch (err) {
-        console.error('[v0] Error fetching profile:', err)
-        setError('An error occurred while loading your profile.')
+        console.error("[v0] Error fetching profile:", err);
+        setError("An error occurred while loading your profile.");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchProfileData()
-  }, [])
+    fetchProfileData();
+  }, []);
 
   return (
     <main className="min-h-screen bg-background">
@@ -60,7 +64,9 @@ export default function ProfilePage() {
             <ArrowLeft className="w-5 h-5" />
             Back
           </Link>
-          <h1 className="text-xl font-bold text-foreground flex-1">My Profile</h1>
+          <h1 className="text-xl font-bold text-foreground flex-1">
+            My Profile
+          </h1>
         </div>
       </nav>
 
@@ -78,7 +84,9 @@ export default function ProfilePage() {
 
         {/* Stats */}
         <section>
-          <h2 className="text-2xl font-bold text-foreground mb-6">Statistics</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-6">
+            Statistics
+          </h2>
           <ProfileStats stats={stats} isLoading={isLoading} />
         </section>
 
@@ -88,5 +96,5 @@ export default function ProfilePage() {
         </section>
       </div>
     </main>
-  )
+  );
 }

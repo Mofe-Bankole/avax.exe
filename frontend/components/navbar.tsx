@@ -5,11 +5,11 @@ import { Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Leaderboards", href: "#leaderboards" },
-  { label: "Tournaments", href: "#tournaments" },
-  { label: "AI Discovery", href: "#ai" },
-  { label: "Builders", href: "#builders" },
+  { label: "Features", href: "/features" },
+  { label: "Leaderboards", href: "/leaderboards" },
+  { label: "Tournaments", href: "/tournaments" },
+  { label: "Builders", href: "/builders" },
+  {label : "Gamers" , href : "/onboard/gamer/connect"}
 ];
 
 export default function Navbar() {

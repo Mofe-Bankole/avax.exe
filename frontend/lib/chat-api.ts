@@ -1,30 +1,12 @@
+import { Conversation, Message, UserProfile, UserStats } from "./types";
+
 const API_BASE = 'http://localhost:4070'
 
 export interface User {
-  id: string
-  username: string
-  avatar?: string
-  status?: 'online' | 'offline'
-}
-
-export interface Message {
-  id: string
-  conversationId: string
-  senderId: string
-  text: string
-  timestamp: number
-  senderName?: string
-  senderAvatar?: string
-}
-
-export interface Conversation {
-  id: string
-  friendId: string
-  friendName: string
-  friendAvatar?: string
-  lastMessage?: string
-  lastMessageTime?: number
-  unreadCount?: number
+  id: string;
+  username: string;
+  avatar?: string;
+  status?: "online" | "offline";
 }
 
 // Fetch all friends (accepted connections)
@@ -147,35 +129,7 @@ export async function markAsRead(conversationId: string): Promise<boolean> {
 }
 
 // Profile-related interfaces
-export interface UserProfile {
-  id: string
-  username: string
-  email: string
-  avatar?: string
-  bio?: string
-  walletAddress: string
-  role: string
-  createdAt: string
-  updatedAt: string
-  studioName?: string
-  studioDescription?: string
-  studioBannerUrl?: string
-  studioLogoUrl?: string
-  studioWebsite?: string
-  studioTwitter?: string
-  studioInstagram?: string
-  studioDiscord?: string
-  isVerified: boolean
-}
 
-export interface UserStats {
-  totalGamesPlayed?: number
-  leaderboardRank?: number
-  gamesWon?: number
-  totalScore?: number
-  achievementsUnlocked?: number
-  friendsCount?: number
-}
 
 // Fetch user profile
 export async function getUserProfile(userId?: string): Promise<UserProfile | null> {
