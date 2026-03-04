@@ -1,20 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Link from "next/link";
+import React from "react";
+import { BuilderSignupForm } from "@/components/builder/builder-signup-form";
 
-type Mode = "signup" | "signin";
-
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL; // change if needed
-
-export default function Onboarding() {
+export default function BuilderOnboardingPage() {
   return (
     <div className="min-h-screen text-white main_body">
       <header className="sticky top-0 z-20 border-b border-neutral-800/70 backdrop-blur bg-black/60">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          {/* Logo + name */}
           <div className="flex items-center gap-2">
             <div className="flex flex-col leading-tight">
               <span className="text-lg font-bold tracking-tight">
@@ -22,36 +15,24 @@ export default function Onboarding() {
               </span>
             </div>
           </div>
-
-          {/* Navigation + actions */}
-          <nav className="hidden items-center gap-6 text-sm text-neutral-300 md:flex">
-            <a
-              href="#features"
-              className="hover:text-red-400 transition duration-500"
-            >
-              Features
-            </a>
-            <a href="#leaderboards" className="hover:text-white">
-              Leaderboards
-            </a>
-            <a href="#ai" className="hover:text-white">
-              AI Suggestions
-            </a>
-            <a href="#social" className="hover:text-white">
-              Social & Chat
-            </a>
-          </nav>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 md:pt-20 flex flex-col items-center">
-        <div className="h-full text-6xl text-center mt-16 avalanche">
-          #Welcome to Avx.exe Builder
+        <div className="text-center mb-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">
+            Avalanche builder onboarding
+          </p>
+          <h1 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight avalanche">
+            #Welcome to Avx.exe Builder
+          </h1>
+          <p className="mt-3 text-sm md:text-base text-neutral-300 max-w-xl mx-auto">
+            Share your studio details, socials, and wallet once. We&apos;ll use
+            this to power your presence across tournaments, leaderboards, and
+            discovery.
+          </p>
         </div>
-        <div className="px-5 py-5 mt-25 rounded-sm space-y-4 text-center border-spacing-0.5 border-white">
-          <p className="text-xl">Sign up with your core wallet</p>
-          <Button className="cursor-pointer w-full px-2 py-4">
-            Connect Core Wallet
-          </Button>
+        <div className="w-full max-w-3xl">
+          <BuilderSignupForm />
         </div>
       </main>
     </div>

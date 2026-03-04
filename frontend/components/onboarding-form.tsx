@@ -22,6 +22,7 @@ interface FormErrors {
 export function OnboardingForm() {
   const router = useRouter();
   const { signUp, signIn } = useAuth();
+  
   const { address } = useAccount();
   const [formData, setFormData] = useState<IUser>({
     username: "",
@@ -92,43 +93,6 @@ export function OnboardingForm() {
         ...prev,
         [name]: "",
       }));
-    }
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        setErrors((prev) => ({
-          ...prev,
-          avatar: "Please select an image file",
-        }));
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setErrors((prev) => ({
-          ...prev,
-          avatar: "Image must be less than 5MB",
-        }));
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-        setFormData((prev) => ({
-          ...prev,
-          avatar: reader.result as string,
-        }));
-        setErrors((prev) => ({
-          ...prev,
-          avatar: "",
-        }));
-      };
-      reader.readAsDataURL(file);
     }
   };
 

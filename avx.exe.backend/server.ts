@@ -11,6 +11,7 @@ import { getAllUsers, prisma } from "./src/database/prisma";
 import { socketAuthMiddleware } from "./src/sockets/auth";
 import { config } from "./src/config/config";
 import { chatRoutes } from "./src/routes/chat.routes";
+import { builderRoutes } from "./src/routes/builders.routes";
 
 const app = Fastify({ logger: true });
 
@@ -70,7 +71,8 @@ app.get("/api/v1/data/development/prisma/users", async (req, res) => {
 /// ROUTES
 app.register(authRoutes);
 app.register(gameRoutes);
-app.register(chatRoutes)
+app.register(chatRoutes);
+app.register(builderRoutes);
 
 //// prehandlers
 declare module "fastify" {
@@ -80,7 +82,6 @@ declare module "fastify" {
 }
 
 //// SOCKETS
-
 const server = http.createServer(app.server);
 
 export const avax_io = new Server(server, {
@@ -109,8 +110,6 @@ avax_io.on("connection" , (socket) => {
       }
     })
   })
-
-
 
   socket.on("send_message", async ({ conversationId, content }: { conversationId: string; content: string }) => {
     const userId = socket.data.user.id;

@@ -36,8 +36,9 @@ export type AuthContextValue = {
   loading: boolean;
   error?: string;
   signIn: (walletAddress: string) => Promise<Session>;
-  signUp: (params: SignUp) => Promise< {success: boolean; message: string} >;
+  signUp: (params: SignUp) => Promise<{ success: boolean; message: string }>;
   signOut: () => Promise<void>;
+  user: unknown;
 };
 
 export type Session = {

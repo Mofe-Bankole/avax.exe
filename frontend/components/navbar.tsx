@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -13,6 +14,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
@@ -43,18 +45,45 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden items-center gap-3 md:flex">
-          <a
-            href="/onboard/gamer/login"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Log in
-          </a>
-          <a
-            href="#"
-            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            List Game
-          </a>
+          {user ? (
+            <>
+              <div className="text-sm text-muted-foreground">
+                Signed in as{" "}
+                <span className="font-mono ml-2">
+                  {user.username ??
+                    (user as any).walletAddress ??
+                    (user as any).id}
+                </span>
+              </div>
+              <button
+                onClick={() => void signOut()}
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Log out
+              </button>
+              <a
+                href="#"
+                className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                List Game
+              </a>
+            </>
+          ) : (
+            <>
+              <a
+                href="/onboard/gamer/login"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Log in
+              </a>
+              <a
+                href="#"
+                className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                List Game
+              </a>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -88,18 +117,49 @@ export default function Navbar() {
             ))}
           </ul>
           <div className="mt-6 flex flex-col gap-3">
-            <a
-              href="#"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Log in
-            </a>
-            <a
-              href="#"
-              className="rounded-full bg-primary px-5 py-2.5 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-            >
-              Launch App
-            </a>
+            {user ? (
+              <>
+                <div className="text-sm text-neutral-300">
+                  Signed in as{" "}
+                  <span className="font-mono">
+                    {user.username ??
+                      (user as unknown).walletAddress ??
+                      (user as unknown).id}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    void signOut();
+                    setMobileOpen(false);
+                  }}
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground text-left"
+                >
+                  Log out
+                </button>
+                <a
+                  href="#"
+                  className="rounded-full bg-primary px-5 py-2.5 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  Launch App
+                </a>
+              </>
+            ) : (
+              <>
+                <a
+                  href="/onboard/gamer/login"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Log in
+                </a>
+                <a
+                  href="#"
+                  className="rounded-full bg-primary px-5 py-2.5 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  Launch App
+                </a>
+              </>
+            )}
           </div>
         </div>
       )}
